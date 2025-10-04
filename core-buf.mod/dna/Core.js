@@ -80,36 +80,43 @@ class Core {
     draw() {
         const { x, y, w, h, cw, ch, cellSize } = this
         const dw     = .1  * cellSize,
-              margin = .05 * cellSize,
+              margin = .1  * cellSize,
               mw     = cellSize - 2 * margin
 
         save()
         translate(x - .5 * w, y - .5 * h)
 
         // hint the edge
-        const lw = 2
+        const lw = 1
         lineWidth(lw)
         stroke( hsl(.6, .6, .5) )
         rect(-lw, -lw, w + 2*lw, h + 2*lw)
 
+        lineWidth(1)
+        const color = env.style.color.core
         for (let y = 0; y < ch; y++) {
             for (let x = 0; x < cw; x++) {
                 const cell = this.cells[y * cw + x]
 
                 if (cell.v) {
+                    const lx = x * cellSize + margin,
+                          ly = y * cellSize + margin
                     switch (cell.sel) {
                         case 1:
-                            fill( hsl(.25, .6, .5) )
+                            fill( color.marked )
                             break
                         case 2:
-                            fill( hsl(.01, .6, .5) )
+                            fill( color.focused )
                             break
                         default:
-                            fill( hsl(.6, .6, .5) )
+                            fill( color.low )
                     }
-                    rect(x * cellSize + margin, y * cellSize + margin, mw, mw)
+                    rect(lx, ly, mw, mw)
+
+                    stroke( color.base )
+                    rect(lx, ly, mw, mw)
                 } else {
-                    fill( hsl(.6, .6, .5) )
+                    fill( color.low )
                     const cx = (x + .5) * cellSize,
                           cy = (y + .5) * cellSize
                     rect(cx - .5 * dw, cy - .5 * dw, dw, dw)
