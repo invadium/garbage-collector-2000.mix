@@ -1,0 +1,29 @@
+# collider.jam
+.meta.cache
+units.json
+
+# collider.jam output
+out*
+dist*
+*.out
+
+# collider.jam output packages
+*.zip
+*.tar
+*.tgz
+*.tar.gz
+
+# run artifacts
+*.log
+*.pid
+
+# masterlist
+*.ml.bak
+
+# jeddy
+.jeddy
+.stat
+
+# macOS
+*.DS_Store
+
