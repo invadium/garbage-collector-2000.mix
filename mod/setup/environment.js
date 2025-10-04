@@ -9,8 +9,19 @@ function environment() {
                 || prop.startsWith('probe')
                 || prop.startsWith('enable')
                 || prop.startsWith('disable')) {
-            env[prop] = env.config[prop]
-            $.core.env[prop] = env.config[prop]
+            let val = env.config[prop]
+
+            // normalize special cases
+            switch(prop) {
+                case 'enableCosmicRays':
+                    if (isStr(val)) {
+                        val = parseFloat(val)
+                    }
+                    break
+            }
+
+            env[prop]        = val
+            $.core.env[prop] = val
         }
     }
 }

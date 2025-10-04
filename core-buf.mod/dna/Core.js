@@ -67,6 +67,14 @@ class Core {
 
     evo(dt) {
         // TODO spawn malloc and free signals from terminals
+
+        if (env.enableCosmicRays) {
+            // DEBUG random memory flips due to cosmic rays
+            const FQ = isNum(env.enableCosmicRays)? env.enableCosmicRays : 1
+            if (math.rndf() < FQ * dt) {
+                this.flip( math.rnde(this.cells) )
+            }
+        }
     }
 
     draw() {
@@ -112,11 +120,27 @@ class Core {
         restore()
     }
 
-    flip(cell) {
+    allocate(cell) {
+        if (!cell) return
+
         if (cell.v === 0) {
             cell.v   = 1
             cell.sel = 0
         }
+    }
+
+    free(cell) {
+        if (!cell || cell.v === 0) return false
+
+        cell.v   = 0
+        cell.sel = 0
+    }
+
+    flip(cell) {
+        if (!cell) return
+
+        if (cell.v === 0) this.allocate(cell)
+        else this.free(cell)
     }
 
     poke(px, py) {
@@ -132,9 +156,11 @@ class Core {
 
             if (cell.v === 0) {
                 // === free cell ===
-                // DEBUG create a cell on LMB double click
-                if ($.env.time - cell.lastTouch < env.tune.doubleClickTimeout) {
-                    this.flip(cell)
+                if (env.probeAlloc) {
+                    // DEBUG create a cell on LMB double click
+                    if ($.env.time - cell.lastTouch < env.tune.doubleClickTimeout) {
+                        this.allocate(cell)
+                    }
                 }
 
             } else {
