@@ -1,10 +1,10 @@
 V project foundation
 V rendering layout
+V framebuffer rendering
+V memory core entity
 
 # core gameplay loop
-> framebuffer rendering
-> port camera
-> mainframe entity
+> port camera zooming in on the memory core
 > free memory dots
 > allocation blocks
 > object links

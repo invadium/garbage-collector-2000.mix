@@ -1,3 +1,5 @@
+const hidden = true
+
 function init() {
     this.x = 0
     this.y = 0

@@ -3,13 +3,13 @@ precision highp float;
 
 in vec2 vTextureCoord;
 
-uniform sampler2D uTextureSampler;
+uniform sampler2D uSampler;
 
 out vec4 fragColor;
 
 void main(void) {
     //gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-    //fragColor = texture(uTextureSampler, vTextureCoord);
+    //fragColor = texture(uSampler, vTextureCoord);
 
     float lightR1 = 100.0;
     float lightR2 = 900.0;
@@ -18,6 +18,6 @@ void main(void) {
 
     float lightFactor = 1.0 - clamp((dist - lightR1)/(lightR2 - lightR1), 0.0, 1.0);
 
-    fragColor = texture(uTextureSampler, vTextureCoord);
-    //fragColor = texture(uTextureSampler, vTextureCoord) * lightFactor;
+    fragColor = texture(uSampler, vTextureCoord);
+    //fragColor = texture(uSampler, vTextureCoord) * lightFactor;
 }
