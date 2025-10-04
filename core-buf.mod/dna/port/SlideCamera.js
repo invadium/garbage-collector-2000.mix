@@ -290,6 +290,20 @@ SlideCamera.prototype.evoFollow = function(dt) {
     }
 }
 
+SlideCamera.prototype.adjustScale = function() {
+    const target = this.target,
+          minPan = this.minPan
+    if (!target || !minPan) return
+
+    const gw = minPan * target.w,
+          gh = minPan * target.h,
+          hs = ctx.width  / gw,
+          vs = ctx.height / gh,
+          ts = hs < vs? hs : vs
+
+    this.scaleTarget = ts
+}
+
 // evolve the camera and all included entities
 // @param {number} dt - delta time in seconds
 SlideCamera.prototype.evo = function(dt) {
@@ -306,6 +320,7 @@ SlideCamera.prototype.evo = function(dt) {
         this.scale *= 1 - this.zoomSpeed * dt
     }
 
+    this.adjustScale()
     if (this.scaleTarget) {
         if (this.scale < this.scaleTarget) {
             this.scale *= 1 + this.zoomSpeed * dt

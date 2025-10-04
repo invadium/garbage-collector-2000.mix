@@ -2,14 +2,15 @@ V project foundation
 V rendering layout
 V framebuffer rendering
 V memory core entity
+V port camera zoom and pan on the memory core
 
 # core gameplay loop
-> port camera zooming in on the memory core
+> terminal (malloc and free source)
+> allocation signals
+> free signals
 > free memory dots
 > allocation blocks
 > object links
-> allocation signals
-> free signals
 > mark a node
 > bomb a node
 > sweep

@@ -90,9 +90,10 @@ class Core {
               ix = floor(cx),
               iy = floor(cy)
 
-        log(`poke at [${ix}:${iy}]@(${cx}:${cy})`)
+        // log(`poke at [${ix}:${iy}]@(${cx}:${cy})`)
         const cell = this.cellAt(ix, iy)
         if (cell) {
+            log(`touching @[${ix}:${iy}]`)
             if (st.action === 1) cell.v = 1
             else cell.v = 0
         }

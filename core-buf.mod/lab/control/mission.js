@@ -3,5 +3,6 @@ function start() {
 
     // TODO clean the port
 
-    lab.port.spawn( dna.Core )
+    const core = lab.port.spawn( dna.Core )
+    lab.port.follow(core, true)
 }
