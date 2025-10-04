@@ -3,6 +3,7 @@ V rendering layout
 V framebuffer rendering
 V memory core entity
 V port camera zoom and pan on the memory core
+V basic mark-and-sweep control
 
 # core gameplay loop
 > terminal (malloc and free source)
