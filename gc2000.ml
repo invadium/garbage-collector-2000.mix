@@ -1,4 +1,5 @@
 V project foundation
+V rendering layout
 
 # core gameplay loop
 > framebuffer rendering
