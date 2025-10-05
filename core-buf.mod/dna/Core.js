@@ -17,6 +17,7 @@ class Core {
             ch:        16,
 
             terminals: [],
+            signals:   [],
         }, st)
         this.clear()
     }
@@ -36,6 +37,7 @@ class Core {
                     v:   math.rndz(.75),
                     sel: 0,
 
+                    signal:    null,
                     lastTouch: 0,
                     locked:    false,
                 }
@@ -65,11 +67,36 @@ class Core {
         return math.rnde( this.cells.filter(c => c.edge && c.v === 0 && !c.term) )
     }
 
+    classifyNeighbours(ix, iy) {
+        const __ = this
+        const res = {
+            free:      [],
+            allocated: [],
+        }
+
+
+        function incAt(ix, iy) {
+            if (ix < 0 || ix >= __.cw || iy < 0 || iy >= __.ch) return
+            const cell = __.cells[iy * __.cw + ix]
+            if (cell) {
+                if (cell.v === 0) res.free.push(cell)
+                else res.allocated.push(cell)
+            }
+        }
+
+        incAt(ix    , iy - 1)
+        incAt(ix - 1, iy    )
+        incAt(ix + 1, iy    )
+        incAt(ix    , iy + 1)
+
+        return res
+    }
+
     attachTerminal(term) {
         const targetCell = this.selectFreeEdgeCell()
         if (!targetCell) return false
 
-        term.core = this
+        term.__   = this
         term.cell = targetCell
 
         targetCell.v = 1
@@ -77,6 +104,15 @@ class Core {
         targetCell.locked = true
 
         this.terminals.push(term)
+
+        return term
+    }
+
+    attachSignal(signal) {
+        signal.__ = this
+        this.signals.push(signal)
+
+        return signal
     }
 
     // translate parent coordinate to the cell space
@@ -142,7 +178,18 @@ class Core {
 
 
     evo(dt) {
-        // TODO spawn malloc and free signals from terminals
+        this.terminals.forEach(t => t.evo(dt))
+
+        for (let i = this.signals.length - 1; i >= 0; i--) {
+            const signal = this.signals[i]
+            if (signal.dead) {
+                const at = this.signals.indexOf(signal)
+                this.signals.splice(at, 1)
+            } else {
+                signal.evo(dt)
+            }
+            this.signals.forEach(s => s.evo(dt))
+        }
 
         if (env.enableCosmicRays) {
             // DEBUG random memory flips due to cosmic rays
@@ -193,7 +240,12 @@ class Core {
                     }
                     rect(lx, ly, mw, mw)
 
-                    stroke( color.base )
+                    if (cell.signal) {
+                        if (cell.signal.type === dry.ALLOC) stroke( color.alloc )
+                        else stroke( color.free )
+                    } else {
+                        stroke( color.base )
+                    }
                     rect(lx, ly, mw, mw)
                 } else {
                     fill( color.low )
@@ -238,4 +290,15 @@ class Core {
         }
     }
 
+    pick(px, py, ls) {
+        const cx = this.lx(px),
+              cy = this.ly(py),
+              ix = floor(cx),
+              iy = floor(cy)
+
+        const cell = this.cellAt(ix, iy)
+        if (cell) ls.push(cell)
+
+        return cell
+    }
 }

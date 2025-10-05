@@ -6,8 +6,25 @@ class Terminal {
         }, st)
     }
 
+    spawnSignal() {
+        if (this.cell.signal) return // can't spawn - another signal is already there
+
+        // TODO base on mission time?
+        const rate = .5 * (cos($.env.time / (TAU * 2)) + 1)
+        const type = rnd() < rate? dry.ALLOC : dry.FREE
+
+        const signal = this.__.attachSignal( new dna.Signal({
+            type:   type,
+            source: this,
+            ttl:    7 + RND(20),
+        }) )
+        this.cell.signal = signal
+        signal.cell = this.cell
+        log(`[${this.name}] -> [${signal.name}:${signal.type}]`)
+    }
+
     evo(dt) {
-        // TODO spawn some signals?
+        if (math.rndf() < .25 * dt) this.spawnSignal()
     }
 
     draw() {
@@ -17,8 +34,8 @@ class Terminal {
         lineWidth(lw)
         stroke( env.style.color.core.base )
 
-        const cx = this.core.cx( cell.x ),
-              cy = this.core.cy( cell.y )
+        const cx = this.__.cx( cell.x ),
+              cy = this.__.cy( cell.y )
         let dx = 0, dy = 0
         switch(cell.dir) {
             case dry.NORTH:

@@ -12,5 +12,6 @@ Available flags:
 ```
 --probeCore             - show core framebuffer raw snapshot
 --probeAlloc            - allocate free memory cell on double click
+--probeCells            - dump the cell object on ctrl + click
 --enableCosmicRays <FQ> - randomly flip memory cells with specified frequency (1 by default)
 ```

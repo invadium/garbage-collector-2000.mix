@@ -3,18 +3,19 @@ V rendering layout
 V framebuffer rendering
 V memory core entity
 V port camera zoom and pan on the memory core
+V free memory dots
 V basic mark-and-sweep control
+V terminal (malloc and free source)
+V allocation signals
+V signal propagation
+V mark a node
+V sweep
 
 # core gameplay loop
-> terminal (malloc and free source)
-> allocation signals
-> free signals
-> free memory dots
-> allocation blocks
-> object links
-> mark a node
-> bomb a node
-> sweep
+> node connections
+> signal transitions
+> free signals to create garbage
+> bomb a node?
 > process damage and penalty on false positive
 
 # advanced flow
