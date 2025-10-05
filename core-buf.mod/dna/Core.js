@@ -65,6 +65,21 @@ class Core {
         return usage
     }
 
+    sigUsage(pid) {
+        if (pid === undefined) pid = -1
+
+        let usage = 0
+        for (let i = this.signals.length - 1; i >= 0; i--) {
+            const signal = this.signals[i]
+            if (!signal.dead) {
+                if (pid < 0) usage++
+                else if (signal.pid === pid) usage++
+            }
+        }
+
+        return usage
+    }
+
     selectFreeEdgeCell() {
         return math.rnde( this.cells.filter(c => c.edge && c.val === 0 && !c.locked && !c.term) )
     }

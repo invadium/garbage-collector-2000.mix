@@ -76,6 +76,8 @@ class Signal {
         if ($.env.time - this.lastMove > env.tune.signalPropagationSpeed) {
             this.move()
         }
+
+        if (this.cell && this.cell.dead) this.kill()
     }
 
     draw() {

@@ -58,15 +58,16 @@ class Terminal {
         line(cx, cy, cx + dx * linkLen, cy + dy * linkLen)
 
         if (env.probeMemUsage) {
-            const memUsage = this.__.memUsage(this.pid)
+            const memUsage = this.__.memUsage(this.pid),
+                  sigUsage = this.__.sigUsage(this.pid)
 
             fill('#ff8000')
             baseMiddle()
             alignCenter()
             font(env.style.font.memDebug.head)
 
-            const shift = this.__.cellSize
-            text(`#${memUsage}`, cx + dx*shift, cy + dy*shift)
+            const shift = 2 * this.__.cellSize
+            text(`#${this.pid}:${memUsage}[${sigUsage}]`, cx + dx*shift, cy + dy*shift)
         }
     }
 
