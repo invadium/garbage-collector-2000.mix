@@ -16,8 +16,9 @@ class Core {
             cw:        16,
             ch:        16,
 
-            terminals: [],
+            links:     [],
             signals:   [],
+            terminals: [],
         }, st)
         this.fillMemory()
     }
@@ -84,19 +85,24 @@ class Core {
         return math.rnde( this.cells.filter(c => c.edge && c.val === 0 && !c.locked && !c.term) )
     }
 
-    classifyNeighbours(ix, iy) {
+    classifyNeighbours(ix, iy, pid) {
         const __ = this
         const res = {
             free:      [],
             allocated: [],
         }
+        if (pid === undefined) pid = -1
 
         function incAt(ix, iy) {
             if (ix < 0 || ix >= __.cw || iy < 0 || iy >= __.ch) return
             const cell = __.cells[iy * __.cw + ix]
             if (cell) {
-                if (cell.val === 0) res.free.push(cell)
-                else res.allocated.push(cell)
+                if (cell.val === 0) {
+                    res.free.push(cell)
+                } else {
+                    if (pid < 0) res.allocated.push(cell)
+                    else if (cell.pid === pid) res.allocated.push(cell)
+                }
             }
         }
 
@@ -113,6 +119,26 @@ class Core {
         this.signals.push(signal)
 
         return signal
+    }
+
+    attachLink(link) {
+        link.__ = this
+        this.links.push(link)
+
+        return link
+    }
+
+    establishLink(signal, origin, dest) {
+
+        const link = new dna.Link({
+            pid:    signal.pid,
+            origin: origin,
+            dest:   dest,
+        })
+
+        origin.attachLink(link)
+        dest.attachLink(link)
+        this.attachLink(link)
     }
 
     // translate parent coordinate to the cell space
@@ -144,7 +170,7 @@ class Core {
         const ls = this.cells
         for (let i = ls.length - 1; i >= 0; i--) {
             const cell = ls[i]
-            if (cell.sel > 0) cell.kill()
+            if (cell.sel > 0) cell.free()
         }
     }
 
@@ -158,6 +184,16 @@ class Core {
     evo(dt) {
         this.terminals.forEach(t => t.evo(dt))
 
+        for (let i = this.links.length - 1; i >= 0; i--) {
+            const link = this.links[i]
+            if (link.dead) {
+                const at = this.links.indexOf(link)
+                this.links.splice(at, 1)
+            } else {
+                link.evo(dt)
+            }
+        }
+
         for (let i = this.signals.length - 1; i >= 0; i--) {
             const signal = this.signals[i]
             if (signal.dead) {
@@ -166,7 +202,6 @@ class Core {
             } else {
                 signal.evo(dt)
             }
-            this.signals.forEach(s => s.evo(dt))
         }
 
         if (env.enableCosmicRays) {
@@ -194,7 +229,14 @@ class Core {
         stroke( hsl(.6, .6, .5) )
         rect(-lw, -lw, w + 2*lw, h + 2*lw)
 
-        this.terminals.forEach(term => term.draw())
+        for (let i = this.terminals.length - 1; i >= 0; i--) {
+            const term = this.terminals[i]
+            if (!term.dead) term.draw()
+        }
+        for (let i = this.links.length - 1; i >= 0; i--) {
+            const link = this.links[i]
+            if (!link.dead) link.draw()
+        }
 
         lineWidth(1)
         const color = env.style.color.core

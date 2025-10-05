@@ -7,6 +7,8 @@ class Signal {
             ttl:   11,
 
             lastMove: $.env.time,
+
+            dead:  false,
         }, st)
     }
 
@@ -14,6 +16,7 @@ class Signal {
         if (!cell || !cell.isAllocatable()) return false
 
         cell.allocate(this.pid)
+        this.__.establishLink(this, this.cell, cell)
         this.kill()
 
         return true
@@ -29,7 +32,7 @@ class Signal {
     }
 
     move() {
-        const neighbours = this.__.classifyNeighbours( this.cell.x, this.cell.y )
+        const neighbours = this.__.classifyNeighbours( this.cell.x, this.cell.y, this.pid )
 
         const signal = this
         function moveNext() {
@@ -77,7 +80,7 @@ class Signal {
             this.move()
         }
 
-        if (this.cell && this.cell.dead) this.kill()
+        if (this.cell && this.cell.isFree()) this.kill()
     }
 
     draw() {

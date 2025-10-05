@@ -5,6 +5,8 @@ class Terminal {
         augment(this, {
             pid:   pid,
             name: 'terminal' + pid,
+
+            dead: false,
         }, st)
     }
 

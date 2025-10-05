@@ -15,6 +15,7 @@ Available flags:
 --probeCells            - dump the cell object on ctrl + click
 --probePid              - show cell process ids
 --probeMemUsage         - show memory usage for each terminal
+--traceCells            - accumulate individual event logs for cells
 --enableCosmicRays <FQ> - randomly flip memory cells with specified frequency (1 by default)
 ```
 

@@ -11,9 +11,11 @@ class Cell {
             val:   0,
             sel:   0,
 
+            links:     [],
             signal:    null,
             lastTouch: 0,
             locked:    false,
+            log:       [],
         }, st)
 
         this.adjustDir()
@@ -54,6 +56,23 @@ class Cell {
         return true
     }
 
+    attachLink(link) {
+        this.links.push(link)
+        if (env.traceCells) this.log.push(`[${env.mtime}] added link [${link.name}]`)
+    }
+
+    detachLink(link) {
+        const i = this.links.indexOf(link)
+        if (i >= 0) {
+            this.links.splice(i, 1)
+            if (env.traceCells) this.log.push(`[${env.mtime}] detached link [${link.name}]`)
+        }
+    }
+
+    isFree() {
+        return (this.val === 0)
+    }
+
     isAllocatable() {
         return (this.val === 0 && !this.locked)
     }
@@ -64,6 +83,7 @@ class Cell {
         this.val = 1
         this.sel = 0
         this.pid = pid || 0
+        if (env.traceCells) this.log.push(`[${env.mtime}] allocated`)
 
         return true
     }
@@ -78,6 +98,11 @@ class Cell {
         this.val = 0
         this.sel = 0
         this.pid = 0
+        if (env.traceCells) this.log.push(`[${env.mtime}] free`)
+
+        const bakLinks = this.links
+        this.links = []
+        bakLinks.forEach(link => link.kill())
 
         return true
     }
@@ -111,6 +136,7 @@ class Cell {
         this.lastTouch = $.env.time
     }
 
+    /*
     kill() {
         if (this.val === 0 || this.locked) return false
 
@@ -123,4 +149,5 @@ class Cell {
 
         return true
     }
+    */
 }
