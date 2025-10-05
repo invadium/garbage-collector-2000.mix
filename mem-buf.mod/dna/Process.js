@@ -4,7 +4,11 @@ class Process {
         extend(this, {
             pid:  0,
 
-            sysCallFQ: .25,
+            // TODO increasing sygnal frequency should increase complexity
+            sysCallFQ:   .5,
+
+            // TODO increasing target memory usage should increase complexity
+            tarMemUsage:  32,
         }, st)
         this.name = 'process' + this.pid
     }
@@ -39,16 +43,29 @@ class Process {
     }
 
     sysCall() {
-        // TODO base on mission time?
-        const rate = .5 * (cos($.env.time / (TAU * 2)) + 1)
-        const type = rnd() < rate? dry.ALLOC : dry.FREE
+        const memUsage = this.__.memUsage()
 
-        switch(type) {
-            case dry.ALLOC:   this.sysAlloc();   break;
-            case dry.RELEASE: this.sysRelease(); break;
-            case dry.FREE:    this.sysFree();    break;
+        let primaryType, secondaryType
+        if (memUsage < this.tarMemUsage) {
+            // give priority on allocations
+            primaryType   = dry.ALLOC
+            secondaryType = dry.RELEASE
+        } else {
+            // give priority on release
+            primaryType   = dry.RELEASE
+            secondaryType = dry.ALLOC
         }
-        //this.spawnSignal(type)
+
+        let type
+
+        // TODO shortening the gap between primary and secondary should increase chaos and complexity
+        //      reduce the gap over time!
+        const n = rnd()
+        if (n < .8) type = primaryType
+        else if (n < .95) type = secondaryType
+        else type = dry.FREE
+
+        this.spawnSignal(type)
     }
 
     evo(dt) {

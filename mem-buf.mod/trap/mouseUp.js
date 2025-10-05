@@ -10,6 +10,6 @@ function mouseUp(e) {
         lab.port.poke(e.x, e.y)
     } else if (e.button === 2) {
         // RMB
-        _.core.sweep()
+        $.core.sweep()
     }
 }

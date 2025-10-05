@@ -6,8 +6,12 @@ class Terminal {
             pid:   pid,
             name: 'terminal' + pid,
 
-            // stat
-            signalsEmitted: 0,
+            stat: {
+                signals:     0,
+                allocations: 0,
+                releases:    0,
+                free:        0,
+            },
 
             dead: false,
         }, st)
@@ -36,7 +40,12 @@ class Terminal {
         const emitted = this.cell.acceptSignal(signal)
         if (emitted) {
             this.__.attachSignal(signal)
-            this.signalsEmitted ++
+            this.stat.signals++
+            switch(signal.type) {
+                case dry.ALLOC:   this.stat.allocations++; break;
+                case dry.RELEASE: this.stat.releases++;    break;
+                case dry.FREE:    this.stat.free++;        break;
+            }
         }
 
         return emitted
