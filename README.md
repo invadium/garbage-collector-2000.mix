@@ -17,3 +17,11 @@ Available flags:
 --probeMemUsage         - show memory usage for each terminal
 --enableCosmicRays <FQ> - randomly flip memory cells with specified frequency (1 by default)
 ```
+
+## AFK
+
+To set the AFK label, set the ```--afk``` parameter:
+
+```
+jam -d --afk 'Coffee Break'
+```
