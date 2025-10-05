@@ -1,8 +1,10 @@
 class Terminal {
 
     constructor(st) {
+        const pid = ++id.terminal
         augment(this, {
-            name: 'terminal' + (++id.terminal)
+            pid:   pid,
+            name: 'terminal' + pid,
         }, st)
     }
 
@@ -16,6 +18,7 @@ class Terminal {
         const signal = this.__.attachSignal( new dna.Signal({
             type:   type,
             source: this,
+            pid:    this.pid,
             ttl:    7 + RND(20),
         }) )
         this.cell.signal = signal

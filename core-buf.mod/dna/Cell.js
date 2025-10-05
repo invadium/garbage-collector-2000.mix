@@ -2,10 +2,11 @@ class Cell {
 
     constructor(st) {
         extend(this, {
+            pid: 0,
             id:  0,
             x:   0,
             y:   0,
-            v:   0,
+            val: 0,
             sel: 0,
 
             signal:    null,
@@ -39,34 +40,48 @@ class Cell {
         }
     }
 
-    isAllocatable() {
-        return (this.v === 0 && !this.locked)
+    attachTerminal(term) {
+        if (this.term || this.locked) return false
+
+        this.term = term
+        term.cell = this
+
+        this.allocate(term.pid)
+        this.lock()
+
+        return true
     }
 
-    allocate() {
-        if (this.v !== 0) return false
+    isAllocatable() {
+        return (this.val === 0 && !this.locked)
+    }
 
-        this.v   = 1
+    allocate(pid) {
+        if (this.val !== 0) return false
+
+        this.val = 1
         this.sel = 0
+        this.pid = pid || 0
 
         return true
     }
 
     isFreeable() {
-        return (this.v !== 0 && !this.locked)
+        return (this.val !== 0 && !this.locked)
     }
 
     free() {
-        if (this.v === 0 || this.locked) return false
+        if (this.val === 0 || this.locked) return false
 
-        this.v   = 0
+        this.val = 0
         this.sel = 0
+        this.pid = 0
 
         return true
     }
 
     lock() {
-        if (this.v === 0) return false
+        if (this.val === 0) return false
 
         this.locked = true
 
@@ -76,12 +91,12 @@ class Cell {
     poke() {
         // log(`touching @[${ix}:${iy}]`)
 
-        if (this.v === 0) {
+        if (this.val === 0) {
             // === free cell ===
             if (env.probeAlloc) {
                 // DEBUG create a cell on LMB double click
                 if ($.env.time - this.lastTouch < env.tune.doubleClickTimeout) {
-                    this.allocate()
+                    this.allocate(0)
                 }
             }
 
@@ -92,5 +107,18 @@ class Cell {
             else this.sel = 0
         }
         this.lastTouch = $.env.time
+    }
+
+    kill() {
+        if (this.val === 0 || this.locked) return false
+
+        this.val = 0
+        this.sel = 0
+
+        if (this.signal) this.signal.kill()
+        // TODO vfx and potential damage to the process (SEG_FAULT)
+        // ...
+
+        return true
     }
 }

@@ -3,6 +3,7 @@ class Signal {
     constructor(st) {
         augment(this, {
             name: 'signal' + (++id.signal),
+            pid:   0,
             ttl:   11,
 
             lastMove: $.env.time,
@@ -12,7 +13,7 @@ class Signal {
     allocate(cell) {
         if (!cell || !cell.isAllocatable()) return false
 
-        this.__.allocateCell(cell)
+        cell.allocate(this.pid)
         this.kill()
 
         return true
@@ -21,7 +22,7 @@ class Signal {
     free(cell) {
         if (!cell || !cell.isFreeable()) return false
 
-        this.__.freeCell(cell)
+        cell.free()
         this.kill()
 
         return true

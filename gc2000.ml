@@ -15,6 +15,7 @@ V cell entity
 # core gameplay loop
 > node connections
 > signal transitions over connections
+> process entity
 > smart signal progpagation
 > free signals to create garbage
 

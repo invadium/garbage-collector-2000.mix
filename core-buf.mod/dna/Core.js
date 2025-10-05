@@ -35,7 +35,6 @@ class Core {
                     id:  ++id,
                     x:   x,
                     y:   y,
-                    // v:   math.rndz(.75),
                 })
             }
         }
@@ -43,7 +42,7 @@ class Core {
     }
 
     selectFreeEdgeCell() {
-        return math.rnde( this.cells.filter(c => c.edge && c.v === 0 && !c.term) )
+        return math.rnde( this.cells.filter(c => c.edge && c.val === 0 && !c.locked && !c.term) )
     }
 
     classifyNeighbours(ix, iy) {
@@ -57,7 +56,7 @@ class Core {
             if (ix < 0 || ix >= __.cw || iy < 0 || iy >= __.ch) return
             const cell = __.cells[iy * __.cw + ix]
             if (cell) {
-                if (cell.v === 0) res.free.push(cell)
+                if (cell.val === 0) res.free.push(cell)
                 else res.allocated.push(cell)
             }
         }
@@ -73,14 +72,9 @@ class Core {
     attachTerminal(term) {
         const targetCell = this.selectFreeEdgeCell()
         if (!targetCell) return false
+        if (!targetCell.attachTerminal(term)) return false
 
         term.__   = this
-        term.cell = targetCell
-
-        targetCell.v = 1
-        targetCell.term = term
-        targetCell.lock()
-
         this.terminals.push(term)
 
         return term
@@ -122,32 +116,15 @@ class Core {
         const ls = this.cells
         for (let i = ls.length - 1; i >= 0; i--) {
             const cell = ls[i]
-            if (cell.v > 0 && cell.sel > 0) {
-                // kill the cell
-                cell.v   = 0
-                cell.sel = 0
-                // TODO vfx and potential damage to the process (SEG_FAULT)
-            }
+            if (cell.sel > 0) cell.kill()
         }
     }
 
-    allocateCell(cell) {
-        if (!cell) return
+    flip(cell, pid) {
+        if (!cell) return false
 
-        cell.allocate()
-    }
-
-    freeCell(cell) {
-        if (!cell) return
-
-        cell.free()
-    }
-
-    flip(cell) {
-        if (!cell) return
-
-        if (cell.v === 0) this.allocateCell(cell)
-        else this.freeCell(cell)
+        if (cell.val === 0) return cell.allocate(pid)
+        else return cell.free()
     }
 
     evo(dt) {
@@ -197,9 +174,18 @@ class Core {
             for (let x = 0; x < cw; x++) {
                 const cell = this.cells[y * cw + x]
 
-                if (cell.v) {
+                if (cell.val === 0) {
+                    // free memory dot
+                    const cx = (x + .5) * cellSize,
+                          cy = (y + .5) * cellSize
+
+                    fill( color.low )
+                    rect(cx - .5 * dw, cy - .5 * dw, dw, dw)
+
+                } else {
                     const lx = x * cellSize + margin,
                           ly = y * cellSize + margin
+
                     switch (cell.sel) {
                         case 1:
                             fill( color.marked )
@@ -220,11 +206,18 @@ class Core {
                         stroke( color.base )
                     }
                     rect(lx, ly, mw, mw)
-                } else {
-                    fill( color.low )
-                    const cx = (x + .5) * cellSize,
-                          cy = (y + .5) * cellSize
-                    rect(cx - .5 * dw, cy - .5 * dw, dw, dw)
+
+                    if (env.probePid) {
+                        const cx = (x + .5) * cellSize,
+                              cy = (y + .5) * cellSize
+
+                        fill('#ffff00')
+                        baseMiddle()
+                        alignCenter()
+                        font(env.style.font.coreDebug.head)
+
+                        text(`#${cell.pid}`, cx, cy)
+                    }
                 }
             }
         }
