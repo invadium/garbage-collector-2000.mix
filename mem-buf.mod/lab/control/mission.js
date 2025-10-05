@@ -1,3 +1,8 @@
+function init() {
+    // pin to global
+    $.mission = this
+}
+
 function clean() {
     // unpin all
     $.core      = null
@@ -35,4 +40,6 @@ function evo(dt) {
     env.time = $.env.time
     this.time += dt
     env.mtime = '' + floor(this.time * 1000)/1000
+
+    if (rnd() < env.tune.mission.activateTermFQ * dt) $.core.activateNextTerm()
 }

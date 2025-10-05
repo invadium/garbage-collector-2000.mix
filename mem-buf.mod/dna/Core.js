@@ -54,6 +54,14 @@ class Core {
         return term
     }
 
+    activateNextTerm() {
+        const nextTerm = math.rnde( this.terminals.filter(term => term.disabled) )
+        if (nextTerm) {
+            log(`activating [${nextTerm.name}]`)
+            nextTerm.activate()
+        }
+    }
+
     memAllocated(pid) {
         if (pid === undefined) pid = -1
 

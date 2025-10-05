@@ -8,7 +8,7 @@ class Process {
             sysCallFQ:   .5,
 
             // TODO increasing target memory usage should increase complexity
-            tarMemUsage:  32,
+            tarMemUsage:  16,
         }, st)
         this.name = 'process' + this.pid
     }
