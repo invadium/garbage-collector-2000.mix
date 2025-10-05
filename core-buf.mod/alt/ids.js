@@ -1,4 +1,6 @@
-const id = {
+const ids = {
+    cell:     0,
+    link:     0,
     terminal: 0,
     signal:   0,
 

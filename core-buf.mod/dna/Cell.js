@@ -1,13 +1,15 @@
 class Cell {
 
     constructor(st) {
+        const id = ++ids.cell
         extend(this, {
-            pid: 0,
-            id:  0,
-            x:   0,
-            y:   0,
-            val: 0,
-            sel: 0,
+            name: 'cell' + id,
+            id:    id,
+            pid:   0,
+            x:     0,
+            y:     0,
+            val:   0,
+            sel:   0,
 
             signal:    null,
             lastTouch: 0,

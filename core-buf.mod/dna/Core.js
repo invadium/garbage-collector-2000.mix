@@ -19,26 +19,50 @@ class Core {
             terminals: [],
             signals:   [],
         }, st)
-        this.clear()
+        this.fillMemory()
     }
 
-    clear() {
+    fillMemory() {
         const { cw, ch, cellSize } = this
         this.w = cw * cellSize
         this.h = ch * cellSize
 
-        let id = 0
         for (let y = 0; y < ch; y++) {
             for (let x = 0; x < cw; x++) {
                 const cell = this.cells[y * cw + x] = new dna.Cell({
                     __:  this,
-                    id:  ++id,
                     x:   x,
                     y:   y,
                 })
             }
         }
         this.capacity = this.cells.length
+    }
+
+    attachTerminal(term) {
+        const targetCell = this.selectFreeEdgeCell()
+        if (!targetCell) return false
+        if (!targetCell.attachTerminal(term)) return false
+
+        term.__   = this
+        this.terminals.push(term)
+
+        return term
+    }
+
+    memUsage(pid) {
+        if (pid === undefined) pid = -1
+
+        let usage = 0
+        for (let i = this.cells.length - 1; i >= 0; i--) {
+            const cell = this.cells[i]
+            if (cell.val !== 0) {
+                if (pid < 0) usage++
+                else if (cell.pid === pid) usage++
+            }
+        }
+
+        return usage
     }
 
     selectFreeEdgeCell() {
@@ -67,17 +91,6 @@ class Core {
         incAt(ix    , iy + 1)
 
         return res
-    }
-
-    attachTerminal(term) {
-        const targetCell = this.selectFreeEdgeCell()
-        if (!targetCell) return false
-        if (!targetCell.attachTerminal(term)) return false
-
-        term.__   = this
-        this.terminals.push(term)
-
-        return term
     }
 
     attachSignal(signal) {

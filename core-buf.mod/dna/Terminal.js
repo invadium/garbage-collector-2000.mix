@@ -1,7 +1,7 @@
 class Terminal {
 
     constructor(st) {
-        const pid = ++id.terminal
+        const pid = ++ids.terminal
         augment(this, {
             pid:   pid,
             name: 'terminal' + pid,
@@ -56,6 +56,18 @@ class Terminal {
         }
         const linkLen = ctx.width
         line(cx, cy, cx + dx * linkLen, cy + dy * linkLen)
+
+        if (env.probeMemUsage) {
+            const memUsage = this.__.memUsage(this.pid)
+
+            fill('#ff8000')
+            baseMiddle()
+            alignCenter()
+            font(env.style.font.memDebug.head)
+
+            const shift = this.__.cellSize
+            text(`#${memUsage}`, cx + dx*shift, cy + dy*shift)
+        }
     }
 
 }

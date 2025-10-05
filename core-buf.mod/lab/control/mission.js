@@ -2,7 +2,7 @@ function start() {
     log('[mission-control] starting the mission...')
 
     lab.port._ls.forEach(node => kill(node))
-    id.reset()
+    ids.reset()
 
     defer(() => {
         const core = lab.port.spawn( dna.Core )

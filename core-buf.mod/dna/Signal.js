@@ -2,7 +2,7 @@ class Signal {
 
     constructor(st) {
         augment(this, {
-            name: 'signal' + (++id.signal),
+            name: 'signal' + (++ids.signal),
             pid:   0,
             ttl:   11,
 

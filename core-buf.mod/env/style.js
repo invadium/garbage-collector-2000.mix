@@ -46,6 +46,10 @@ const style = {
             family: 'basis33',
             size: 8,
         },
+        memDebug: {
+            family: 'basis33',
+            size: 14,
+        },
     }
 }
 
