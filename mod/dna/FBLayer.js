@@ -52,7 +52,7 @@ class FBLayer {
     }
 
     fixCanvas() {
-        return $.core.canvas
+        return $.mem.canvas
     }
 
     fixTexture() {

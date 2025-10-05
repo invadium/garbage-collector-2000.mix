@@ -1,3 +1,3 @@
 function resize() {
-    $.core.trap.signal('resize')
+    $.mem.trap.signal('resize')
 }

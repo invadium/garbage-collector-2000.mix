@@ -5,7 +5,7 @@ const tune = {
 
     core: {
         cellSize:    20,
-        cellRMargin: .2,
-        dotRSize:    .1,
+        cellRMargin: .15,
+        dotRSize:    .075,
     }
 }

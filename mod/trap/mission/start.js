@@ -1,3 +1,3 @@
 function start(e) {
-    $.core.lab.control.mission.start()
+    $.mem.lab.control.mission.start()
 }

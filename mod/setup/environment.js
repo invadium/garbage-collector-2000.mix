@@ -1,6 +1,6 @@
 function environment() {
-    // pin core memory framebuffer to the root mod
-    $.core = mod['core-buf']
+    // pin memory core framebuffer to the root mod
+    $.mem = mod['mem-buf']
 
     // copy debug and trace properties
     for (const prop in env.config) {
@@ -21,11 +21,11 @@ function environment() {
             }
 
             env[prop]        = val
-            $.core.env[prop] = val
+            $.mem.env[prop] = val
         }
     }
 
-    env.link($.core.env.tune)
-    env.link($.core.env.style)
+    env.link($.mem.env.tune)
+    env.link($.mem.env.style)
 }
 environment.Z = 1

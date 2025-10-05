@@ -19,6 +19,9 @@ class Core {
             links:     [],
             signals:   [],
             terminals: [],
+
+            // stat
+            acceptedSignals: 0,
         }, st)
         this.fillMemory()
     }
@@ -140,8 +143,11 @@ class Core {
     }
 
     attachSignal(signal) {
+        if (!signal) return
+
         signal.__ = this
         this.signals.push(signal)
+        this.acceptedSignals ++
 
         return signal
     }

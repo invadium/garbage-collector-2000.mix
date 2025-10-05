@@ -1,7 +1,7 @@
 function clean() {
     // unpin all
-    _.core      = null
-    _.terminals = null
+    $.core      = null
+    $.terminals = null
 }
 
 function reset() {
@@ -18,8 +18,8 @@ function start() {
 
     defer(() => {
         const core = lab.port.spawn( dna.Core )
-        _.core = core
-        _.terminals = core.terminals
+        $.core = core
+        $.terminals = core.terminals
         lab.port.follow(core, true)
 
         // spawn some terminals

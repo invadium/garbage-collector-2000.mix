@@ -4,7 +4,7 @@ const B = 10
 
 function draw() {
     if (!env.probeCore) return
-    const portal = $.core
+    const framebuffer = $.mem
 
     const w = rx(.25)
     const h = ry(.25)
@@ -16,5 +16,5 @@ function draw() {
     stroke( hsl(.2, .5, .5) )
     rect(hb, vb, w, h)
 
-    image(portal.ctx.canvas, hb-1, vb-1, w+2, h+2)
+    image(framebuffer.ctx.canvas, hb-1, vb-1, w+2, h+2)
 }

@@ -6,6 +6,9 @@ class Terminal {
             pid:   pid,
             name: 'terminal' + pid,
 
+            // stat
+            signalsEmitted: 0,
+
             dead: false,
         }, st)
         this.process = new dna.Process({
@@ -33,6 +36,7 @@ class Terminal {
         const emitted = this.cell.acceptSignal(signal)
         if (emitted) {
             this.__.attachSignal(signal)
+            this.signalsEmitted ++
         }
 
         return emitted
