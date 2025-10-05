@@ -15,18 +15,18 @@ class Link {
     }
 
     evo(dt) {
+        // just in case we've missed the link
+        if (this.origin.isFree() || this.dest.isFree()) {
+            const { origin, dest } = this
+            log.warn(`[${env.mtime}]:[${origin.x}:${origin.y}]-x-[${dest.x}:${dest.y}] - broken link!`)
+            this.kill()
+            return
+        }
     }
 
     draw() {
         const { __, origin, dest } = this
         if (this.dead || !origin || !dest) return
-        /*
-        if (origin.isFree() || dest.isFree()) {
-            this.kill()
-            log.warn(`[${env.mtime}]:[${origin.x}:${origin.y}]-x-[${dest.x}:${dest.y}] - broken link!`)
-            return
-        }
-        */
 
         const ox = __.cx( origin.x ),
               oy = __.cy( origin.y ),

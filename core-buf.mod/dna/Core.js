@@ -182,14 +182,17 @@ class Core {
     }
 
     evo(dt) {
-        this.terminals.forEach(t => t.evo(dt))
+        for (let i = this.terminals.length - 1; i >= 0; i--) {
+            const term = this.terminals[i]
+            if (!term.dead && !term.disabled) term.evo(dt)
+        }
 
         for (let i = this.links.length - 1; i >= 0; i--) {
             const link = this.links[i]
             if (link.dead) {
                 const at = this.links.indexOf(link)
                 this.links.splice(at, 1)
-            } else {
+            } else if (!link.disabled) {
                 link.evo(dt)
             }
         }
@@ -199,7 +202,7 @@ class Core {
             if (signal.dead) {
                 const at = this.signals.indexOf(signal)
                 this.signals.splice(at, 1)
-            } else {
+            } else if (!signal.disabled) {
                 signal.evo(dt)
             }
         }

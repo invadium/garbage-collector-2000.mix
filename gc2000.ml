@@ -11,11 +11,13 @@ V signal propagation
 V mark a node
 V sweep
 V cell entity
+V node links
 
 # core gameplay loop
-> node links
-> signal transitions over connections
 > process entity
+> signal movement only over the links
+> establish doublelinks when detected connection by the track record
+> visual signal transitions over connections
 > smart signal progpagation
 > free signals that create garbage
 

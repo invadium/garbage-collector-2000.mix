@@ -8,6 +8,15 @@ class Terminal {
 
             dead: false,
         }, st)
+        this.disable()
+    }
+
+    activate() {
+        this.disabled = false
+    }
+
+    disable() {
+        this.disabled = true
     }
 
     spawnSignal() {
@@ -37,7 +46,8 @@ class Terminal {
 
         const lw = 2
         lineWidth(lw)
-        stroke( env.style.color.core.base )
+        if (this.disabled) stroke( env.style.color.core.disabled )
+        else stroke( env.style.color.core.base )
 
         const cx = this.__.cx( cell.x ),
               cy = this.__.cy( cell.y )

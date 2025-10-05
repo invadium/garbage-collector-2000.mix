@@ -15,8 +15,10 @@ function start() {
         lab.port.follow(core, true)
 
         // spawn some terminals
-        for (let i = 0; i < 4; i++) {
-            core.attachTerminal( new dna.Terminal() )
+        const ACTIVE = 4
+        for (let i = 0; i < 16; i++) {
+            const term = core.attachTerminal( new dna.Terminal() )
+            if (i < ACTIVE) term.activate()
         }
     })
 }
