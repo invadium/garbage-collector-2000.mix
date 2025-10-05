@@ -13,11 +13,11 @@ V sweep
 V cell entity
 
 # core gameplay loop
-> node connections
+> node links
 > signal transitions over connections
 > process entity
 > smart signal progpagation
-> free signals to create garbage
+> free signals that create garbage
 
 > bomb a node?
 > process damage and penalty on false positive

@@ -24,4 +24,7 @@ function environment() {
             $.core.env[prop] = val
         }
     }
+
+    env.link($.core.env.tune)
+    env.link($.core.env.style)
 }

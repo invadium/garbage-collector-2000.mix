@@ -1,6 +1,8 @@
 const style = {
 
     color: {
+        title: '#ff8000',
+
         core: {
             low:     hsl(.6,  .4, .35),
             base:    hsl(.6,  .5, .5),
@@ -22,7 +24,7 @@ const style = {
             size:   32,
         },
         title: {
-            family: 'moon',
+            family: 'jupiter-crash',
             size:   64,
         },
         menu: {
