@@ -20,7 +20,7 @@ class Terminal {
         }) )
         this.cell.signal = signal
         signal.cell = this.cell
-        log(`[${this.name}] -> [${signal.name}:${signal.type}]`)
+        //log(`[${this.name}] -> [${signal.name}:${signal.type}]`)
     }
 
     evo(dt) {

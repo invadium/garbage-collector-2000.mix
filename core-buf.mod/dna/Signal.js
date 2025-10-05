@@ -10,18 +10,18 @@ class Signal {
     }
 
     allocate(cell) {
-        if (!cell || cell.v !== 0 || cell.locked) return false
+        if (!cell || !cell.isAllocatable()) return false
 
-        this.__.allocate(cell)
+        this.__.allocateCell(cell)
         this.kill()
 
         return true
     }
 
     free(cell) {
-        if (!cell || cell.v === 0 || cell.locked) return false
+        if (!cell || !cell.isFreeable()) return false
 
-        this.__.free(cell)
+        this.__.freeCell(cell)
         this.kill()
 
         return true

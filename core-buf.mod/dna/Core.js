@@ -9,7 +9,7 @@ class Core {
             y:         0,
             w:         0,
             h:         0,
-            cellSize:  20,
+            cellSize:  env.tune.core.cellSize,
 
             // cell space
             cells:     [],
@@ -30,34 +30,13 @@ class Core {
         let id = 0
         for (let y = 0; y < ch; y++) {
             for (let x = 0; x < cw; x++) {
-                const cell = this.cells[y * cw + x] = {
+                const cell = this.cells[y * cw + x] = new dna.Cell({
+                    __:  this,
                     id:  ++id,
                     x:   x,
                     y:   y,
-                    v:   math.rndz(.75),
-                    sel: 0,
-
-                    signal:    null,
-                    lastTouch: 0,
-                    locked:    false,
-                }
-                // detect the edge and direction
-                if (x === 0 && y !== 0 && y !== ch - 1) {
-                    cell.edge = true
-                    cell.dir  = dry.WEST
-                }
-                if (x === cw - 1 && y !== 0 && y !== ch - 1) {
-                    cell.edge = true
-                    cell.dir  = dry.EAST
-                }
-                if (y === 0 && x !== 0 && x !== cw - 1) {
-                    cell.edge = true
-                    cell.dir  = dry.NORTH
-                }
-                if (y === cw - 1 && x !== 0 && x !== cw - 1) {
-                    cell.edge = true
-                    cell.dir  = dry.SOUTH
-                }
+                    // v:   math.rndz(.75),
+                })
             }
         }
         this.capacity = this.cells.length
@@ -73,7 +52,6 @@ class Core {
             free:      [],
             allocated: [],
         }
-
 
         function incAt(ix, iy) {
             if (ix < 0 || ix >= __.cw || iy < 0 || iy >= __.ch) return
@@ -101,7 +79,7 @@ class Core {
 
         targetCell.v = 1
         targetCell.term = term
-        targetCell.locked = true
+        targetCell.lock()
 
         this.terminals.push(term)
 
@@ -153,29 +131,24 @@ class Core {
         }
     }
 
-    allocate(cell) {
+    allocateCell(cell) {
         if (!cell) return
 
-        if (cell.v === 0) {
-            cell.v   = 1
-            cell.sel = 0
-        }
+        cell.allocate()
     }
 
-    free(cell) {
-        if (!cell || cell.v === 0 || cell.locked) return false
+    freeCell(cell) {
+        if (!cell) return
 
-        cell.v   = 0
-        cell.sel = 0
+        cell.free()
     }
 
     flip(cell) {
         if (!cell) return
 
-        if (cell.v === 0) this.allocate(cell)
-        else this.free(cell)
+        if (cell.v === 0) this.allocateCell(cell)
+        else this.freeCell(cell)
     }
-
 
     evo(dt) {
         this.terminals.forEach(t => t.evo(dt))
@@ -202,8 +175,8 @@ class Core {
 
     draw() {
         const { x, y, w, h, cw, ch, cellSize } = this
-        const dw     = .1  * cellSize,
-              margin = .1  * cellSize,
+        const dw     = env.tune.core.dotRSize * cellSize,
+              margin = env.tune.core.cellRMargin * cellSize,
               mw     = cellSize - 2 * margin
 
         save()
@@ -256,7 +229,6 @@ class Core {
             }
         }
 
-
         restore()
     }
 
@@ -268,26 +240,7 @@ class Core {
 
         // log(`poke at [${ix}:${iy}]@(${cx}:${cy})`)
         const cell = this.cellAt(ix, iy)
-        if (cell) {
-            // log(`touching @[${ix}:${iy}]`)
-
-            if (cell.v === 0) {
-                // === free cell ===
-                if (env.probeAlloc) {
-                    // DEBUG create a cell on LMB double click
-                    if ($.env.time - cell.lastTouch < env.tune.doubleClickTimeout) {
-                        this.allocate(cell)
-                    }
-                }
-
-            } else if (!cell.locked) {
-                // mark
-                if (cell.sel === 0) cell.sel = 1
-                else if (cell.sel === 1) cell.sel = 2
-                else cell.sel = 0
-            }
-            cell.lastTouch = $.env.time
-        }
+        if (cell) cell.poke()
     }
 
     pick(px, py, ls) {

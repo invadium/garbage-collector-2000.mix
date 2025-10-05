@@ -10,13 +10,21 @@ V allocation signals
 V signal propagation
 V mark a node
 V sweep
+V cell entity
 
 # core gameplay loop
 > node connections
-> signal transitions
+> signal transitions over connections
+> smart signal progpagation
 > free signals to create garbage
+
 > bomb a node?
 > process damage and penalty on false positive
+> kill and feeze the process?
+
+> memory usage indicator (all - [used - garbage - free])
+> bomb/charge indicator?
+> bomb/charge accumulation mechanic
 
 # advanced flow
 > main menu
@@ -29,6 +37,8 @@ V sweep
 > destruction particles
 > node wobbling
 > node shaking
+> memory usage history graph
+> cpu usage history graph
 
 # content
 > sound effects
