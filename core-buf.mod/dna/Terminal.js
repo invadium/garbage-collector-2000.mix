@@ -8,7 +8,15 @@ class Terminal {
 
             dead: false,
         }, st)
+        this.process = new dna.Process({
+            __:  this,
+            pid: this.pid,
+        })
         this.disable()
+    }
+
+    memUsage() {
+        return this.__.memUsage(this)
     }
 
     activate() {
@@ -19,26 +27,19 @@ class Terminal {
         this.disabled = true
     }
 
-    spawnSignal() {
-        if (this.cell.signal) return // can't spawn - another signal is already there
+    emitSignal(signal) {
+        if (!signal) return false
 
-        // TODO base on mission time?
-        const rate = .5 * (cos($.env.time / (TAU * 2)) + 1)
-        const type = rnd() < rate? dry.ALLOC : dry.FREE
+        const emitted = this.cell.acceptSignal(signal)
+        if (emitted) {
+            this.__.attachSignal(signal)
+        }
 
-        const signal = this.__.attachSignal( new dna.Signal({
-            type:   type,
-            source: this,
-            pid:    this.pid,
-            ttl:    7 + RND(20),
-        }) )
-        this.cell.signal = signal
-        signal.cell = this.cell
-        //log(`[${this.name}] -> [${signal.name}:${signal.type}]`)
+        return emitted
     }
 
     evo(dt) {
-        if (math.rndf() < .25 * dt) this.spawnSignal()
+        this.process.evo(dt)
     }
 
     draw() {
@@ -69,9 +70,12 @@ class Terminal {
         const linkLen = ctx.width
         line(cx, cy, cx + dx * linkLen, cy + dy * linkLen)
 
-        if (env.probeMemUsage) {
-            const memUsage = this.__.memUsage(this.pid),
-                  sigUsage = this.__.sigUsage(this.pid)
+        if (env.probeResUtil && !this.disabled) {
+            const __ = this.__,
+                  blocksAllocated = __.memAllocated(this.pid),
+                  blocksUsed      = __.memUsage(this),
+                  liveSignals     = __.liveSignals(this.pid),
+                  usage           = `'${blocksAllocated}/${blocksUsed}[${liveSignals}]`
 
             fill('#ff8000')
             baseMiddle()
@@ -79,7 +83,7 @@ class Terminal {
             font(env.style.font.memDebug.head)
 
             const shift = 2 * this.__.cellSize
-            text(`#${this.pid}:${memUsage}[${sigUsage}]`, cx + dx*shift, cy + dy*shift)
+            text(`#${this.pid}:${usage}`, cx + dx*shift, cy + dy*shift)
         }
     }
 

@@ -51,34 +51,59 @@ class Core {
         return term
     }
 
-    memUsage(pid) {
+    memAllocated(pid) {
         if (pid === undefined) pid = -1
 
-        let usage = 0
+        let blocks = 0
         for (let i = this.cells.length - 1; i >= 0; i--) {
             const cell = this.cells[i]
             if (cell.val !== 0) {
-                if (pid < 0) usage++
-                else if (cell.pid === pid) usage++
+                if (pid < 0) blocks++
+                else if (cell.pid === pid) blocks++
             }
         }
 
-        return usage
+        return blocks 
     }
 
-    sigUsage(pid) {
+    memUsage(term) {
+        const cells = this.cells
+
+        // pre-walk clean up
+        for (let i = cells.length - 1; i >= 0; i--) {
+            cells[i]._visited = 0
+        }
+
+        function walk(cell) {
+            let acc = 1
+            cell._visited = 1
+
+            cell.walkConnected(next => {
+                if (next._visited) return // we've already visited this cell
+                if (next.isFree()) return // just in weird case we've got a free cell here
+                if (next.pid !== term.pid) return // weird case of foreign process link
+                acc += walk(next)
+            })
+
+            return acc
+        }
+
+        return walk(term.cell)
+    }
+
+    liveSignals(pid) {
         if (pid === undefined) pid = -1
 
-        let usage = 0
+        let signals = 0
         for (let i = this.signals.length - 1; i >= 0; i--) {
             const signal = this.signals[i]
             if (!signal.dead) {
-                if (pid < 0) usage++
-                else if (signal.pid === pid) usage++
+                if (pid < 0) signals++
+                else if (signal.pid === pid) signals++
             }
         }
 
-        return usage
+        return signals
     }
 
     selectFreeEdgeCell() {

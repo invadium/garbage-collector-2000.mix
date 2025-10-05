@@ -11,11 +11,14 @@ class Cell {
             val:   0,
             sel:   0,
 
-            links:     [],
-            signal:    null,
-            lastTouch: 0,
-            locked:    false,
-            log:       [],
+            links:      [],
+            signal:     null,
+            locked:     false,
+
+            _lastTouch: 0,
+            _visited:   0,
+
+            log:        [],
         }, st)
 
         this.adjustDir()
@@ -67,6 +70,23 @@ class Cell {
             this.links.splice(i, 1)
             if (env.traceCells) this.log.push(`[${env.mtime}] detached link [${link.name}]`)
         }
+    }
+
+    walkConnected(fn) {
+        for (let i = this.links.length - 1; i >= 0; i--) {
+            const link = this.links[i]
+            const linkedCell = link.origin === this? link.dest : link.origin
+            fn(linkedCell)
+        }
+    }
+
+    acceptSignal(signal) {
+        if (this.signal) return false
+
+        this.signal = signal
+        signal.cell = this
+
+        return true
     }
 
     isFree() {
@@ -122,7 +142,7 @@ class Cell {
             // === free cell ===
             if (env.probeAlloc) {
                 // DEBUG create a cell on LMB double click
-                if ($.env.time - this.lastTouch < env.tune.doubleClickTimeout) {
+                if ($.env.time - this._lastTouch < env.tune.doubleClickTimeout) {
                     this.allocate(0)
                 }
             }
@@ -133,7 +153,7 @@ class Cell {
             else if (this.sel === 1) this.sel = 2
             else this.sel = 0
         }
-        this.lastTouch = $.env.time
+        this._lastTouch = $.env.time
     }
 
     /*

@@ -1,3 +1,9 @@
+function clean() {
+    // unpin all
+    _.core      = null
+    _.terminals = null
+}
+
 function reset() {
     this.time = 0
 }
@@ -7,11 +13,13 @@ function start() {
 
     lab.port._ls.forEach(node => kill(node))
     ids.reset()
+    this.clean()
     this.reset()
 
     defer(() => {
         const core = lab.port.spawn( dna.Core )
         _.core = core
+        _.terminals = core.terminals
         lab.port.follow(core, true)
 
         // spawn some terminals

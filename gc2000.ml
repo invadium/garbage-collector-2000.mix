@@ -12,9 +12,9 @@ V mark a node
 V sweep
 V cell entity
 V node links
+V process entity
 
 # core gameplay loop
-> process entity
 > signal movement only over the links
 > establish doublelinks when detected connection by the track record
 > visual signal transitions over connections
