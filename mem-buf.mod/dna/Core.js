@@ -304,8 +304,11 @@ class Core {
                     rect(lx, ly, mw, mw)
 
                     if (cell.signal) {
-                        if (cell.signal.type === dry.ALLOC) stroke( color.alloc )
-                        else stroke( color.free )
+                        switch(cell.signal.type) {
+                            case dry.ALLOC:   stroke( color.alloc );   break;
+                            case dry.RELEASE: stroke( color.release ); break;
+                            case dry.FREE:    stroke( color.free );    break;
+                        }
                     } else {
                         stroke( color.base )
                     }

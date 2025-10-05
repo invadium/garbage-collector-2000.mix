@@ -1,7 +1,8 @@
 const dry = {
     // signal types
-    ALLOC: 1,
-    FREE:  2,
+    ALLOC:   1,
+    RELEASE: 2,
+    FREE:    3,
 
     // directions
     NORTH: 1,

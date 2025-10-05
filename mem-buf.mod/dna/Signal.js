@@ -83,9 +83,6 @@ class Signal {
         if (this.cell && this.cell.isFree()) this.kill()
     }
 
-    draw() {
-    }
-
     kill() {
         this.dead = true
         this.cell.signal = null
