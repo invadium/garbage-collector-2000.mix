@@ -12,7 +12,7 @@ const tune = {
     },
 
     signal: {
-        propagationSpeed: 1,
+        propagationSpeed: .075,
         stallKillSwitch:  2,
     },
 

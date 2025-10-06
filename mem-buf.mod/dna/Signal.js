@@ -24,13 +24,23 @@ class Signal {
     // allocate and link target cell and autokill
     allocate(cell, fallback) {
         if (!cell || !cell.isAllocatable()) {
-            log("can't allocated - fallback")
+            // log("can't allocated - fallback")
             return fallback()
         }
 
         cell.allocate(this.pid)
         this.__.establishLink(this, this.cell, cell)
         this.kill()
+
+        return true
+    }
+
+    connectTo(targetCell, fallback) {
+        if (!targetCell) return fallback()
+
+        const link = this.__.establishLink(this, this.cell, targetCell)
+        this.kill()
+        // log(`new link: ${link.toString()}`)
 
         return true
     }
@@ -47,7 +57,7 @@ class Signal {
     // release and free target cell and autokill
     free(fallback) {
         if (!this.cell || !this.cell.isFreeable()) {
-            log("can't free current cell - fallback")
+            // log("can't free current cell - fallback")
             return fallback()
         }
 
@@ -69,7 +79,7 @@ class Signal {
 
     // leap from the link to the next cell
     leapToNextCell() {
-        log(`[${this.toString()}] leaping to next cell`)
+        // log(`[${this.toString()}] leaping to next cell`)
         if (!this.targetCell) return false
 
         const moved = this.moveTo(this.targetCell)
@@ -103,7 +113,7 @@ class Signal {
         if (this.ttl) {
             this.ttl--
             if (this.ttl === 0) {
-                log(`[${this.toString()}] ttl killswitch`)
+                // log(`[${this.toString()}] ttl killswitch`)
                 return this.kill()
             }
         }
@@ -112,41 +122,26 @@ class Signal {
 
         if (this.link) return this.leapToNextCell()
 
-        /*
-        function move() {
-            const next = math.rnde(neighbours.allocated)
-
-            // TODO resolve signal collisions
-            if (!next || next.signal) return
-
-            next.signal = signal
-            signal.cell.signal = null
-            signal.cell = next
-
-            signal.stat.moves ++
-        }
-        */
-
         const signal = this
-        function nextLink() {
+        function followNextLink() {
             // try to follow the links nobody visited yet
             let link = math.rnde(signal.cell.rawLinks())
             // if none, try to follow the link we haven't visited recently
             if (!link) {
-                log(`[${signal.toString()}] no raw links - picking fresh`)
+                // log(`[${signal.toString()}] no raw links - picking fresh`)
                 link = math.rnde(signal.cell.freshLinks(signal.id))
             } else {
-                log(`[${signal.toString()}] got a raw link`)
-                console.dir(signal.cell.rawLinks())
+                // log(`[${signal.toString()}] got a raw link`)
+                // console.dir(signal.cell.rawLinks())
             }
             // if none, just pick a random one
             if (!link) {
-                log(`[${signal.toString()}] no fresh links - picking a random link `)
+                // log(`[${signal.toString()}] no fresh links - picking a random link `)
                 link = math.rnde(signal.cell.links)
             }
 
             if (link) {
-                log(`[${signal.toString()}] got a link [${link.name}]`)
+                // log(`[${signal.toString()}] got a link [${link.name}]`)
                 signal.originCell = link.getLocal(signal.cell)
                 signal.targetCell = link.getRemote(signal.cell)
                 if (!signal.originCell || !signal.targetCell) return false
@@ -158,44 +153,50 @@ class Signal {
 
         if (this.ttw > 0) {
             // still have obligatory moves
-            log(`[${this.toString()}] still walking - ttw:${this.ttw}`)
+            // log(`[${this.toString()}] still walking - ttw:${this.ttw}`)
             this.ttw --
-            return nextLink()
+            return followNextLink()
         } 
 
         const neighbours = this.__.classifyNeighbours( this.cell.x, this.cell.y, this.pid )
 
         if (this.type === dry.ALLOC) {
-            log(`[${this.toString()}] trying to allocate`)
+            const separatedCell = math.rnde(neighbours.separated)
+            if (separatedCell) {
+                // got a friendly cell to connect to
+                return this.connectTo(separatedCell, followNextLink)
+            }
+
+            // log(`[${this.toString()}] trying to allocate`)
             const freeCell = math.rnde(neighbours.free)
 
             if (freeCell) {
-                log(`[${this.toString()}] selectd the cell: ` + freeCell.toString())
+                // log(`[${this.toString()}] selectd the cell: ` + freeCell.toString())
             } else {
-                log(`[${this.toString()}] no cell to allocate`)
+                // log(`[${this.toString()}] no cell to allocate`)
             }
 
-            if (freeCell) return this.allocate(freeCell, nextLink)
-            else return nextLink()
+            if (freeCell) return this.allocate(freeCell, followNextLink)
+            else return followNextLink()
 
-        } if (this.type === dry.RELEASE) {
+        } else if (this.type === dry.RELEASE) {
 
             const link = math.rnde(this.cell.links)
             if (link) {
-                return this.release(link, nextLink)
+                return this.release(link, followNextLink)
             } else {
-                return nextLink()
+                return followNextLink()
             }
 
 
         } else if (this.type === dry.FREE) {
-            return this.free(nextLink)
+            return this.free(followNextLink)
             /*
             const allocatedCell = math.rnde(neighbours.allocated)
             if (allocatedCell) {
-                return this.free(allocatedCell, nextLink)
+                return this.free(allocatedCell, followNextLink)
             } else {
-                return nextLink()
+                return followNextLink()
             }
             */
 
@@ -210,7 +211,7 @@ class Signal {
             if (!motion) {
                 this.stat.stalls ++
                 if (this.stat.stalls > env.tune.signal.stallKillSwitch) {
-                    log(`[${this.toString()}] stalled - activating kill switch`)
+                    // log(`[${this.toString()}] stalled - activating kill switch`)
                     this.kill()
                 }
             }

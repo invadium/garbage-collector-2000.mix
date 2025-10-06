@@ -85,6 +85,14 @@ class Cell {
         return this.links.filter(l => l._smellId === 0)
     }
 
+    isConnectedTo(ix, iy, pid) {
+        let connected = false
+        this.links.forEach(link => {
+            if (link.isConnectedTo(ix, iy, pid)) connected = true
+        })
+        return connected
+    }
+
     walkConnected(fn) {
         for (let i = this.links.length - 1; i >= 0; i--) {
             const link = this.links[i]

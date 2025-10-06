@@ -55,9 +55,6 @@ class Core {
     }
 
     activateNextTerm() {
-        // DEBUG
-        return
-
         const nextTerm = math.rnde( this.terminals.filter(term => term.disabled) )
         if (nextTerm) {
             log(`activating [${nextTerm.name}]`)
@@ -129,6 +126,8 @@ class Core {
         const res = {
             free:      [],
             allocated: [],
+            connected: [],
+            separated: [],
         }
         if (pid === undefined) pid = -1
 
@@ -139,8 +138,13 @@ class Core {
                 if (cell.val === 0) {
                     res.free.push(cell)
                 } else {
-                    if (pid < 0) res.allocated.push(cell)
-                    else if (cell.pid === pid) res.allocated.push(cell)
+                    if (pid < 0) {
+                        res.allocated.push(cell)
+                    } else if (cell.pid === pid) {
+                        res.allocated.push(cell)
+                        if (cell.isConnectedTo(ix, iy, pid)) res.connected.push(cell)
+                        else res.separated.push(cell)
+                    }
                 }
             }
         }
@@ -171,6 +175,7 @@ class Core {
     }
 
     establishLink(signal, origin, dest) {
+        if (!signal || !origin || !dest) return
 
         const link = new dna.Link({
             pid:    signal.pid,
@@ -181,6 +186,8 @@ class Core {
         origin.attachLink(link)
         dest.attachLink(link)
         this.attachLink(link)
+
+        return link
     }
 
     // translate parent coordinate to the cell space

@@ -1,10 +1,10 @@
-# core gameplay loop
-> signal movement only over the links
-> establish doublelinks when detected connection by the track record
-> smart signal progpagation
-> visual signal transitions over connections
-> free signals that create garbage
+V signal movement only over the links
+V establish doublelinks when detected connection by the track record
+V smart signal progpagation
+V free signals that create garbage
+V visual signal transitions over connections
 
+# core gameplay loop
 > bomb a node?
 > process damage and penalty on false positive
 > kill and feeze the process?

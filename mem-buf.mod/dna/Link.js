@@ -82,6 +82,20 @@ class Link {
         if (this.origin === cell || this.dest === cell) return cell
     }
 
+    isConnectedTo(ix, iy, pid) {
+        if (this.dead || this.pid !== pid) return false
+
+        if (this.origin.x === ix && this.origin.y === iy && this.origin.pid === pid) return true
+        if (this.dest.x === ix && this.dest.y === iy && this.dest.pid === pid) return true
+
+        return false
+    }
+
+    toString() {
+        const { pid, name, origin, dest } = this
+        return `[#${pid}/${name}|${origin.x}:${origin.y}]--[${dest.x}:${dest.y}]`
+    }
+
     kill() {
         if (this.origin) this.origin.detachLink(this)
         if (this.dest) this.dest.detachLink(this)
