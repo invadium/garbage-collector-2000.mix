@@ -1,19 +1,3 @@
-V project foundation
-V rendering layout
-V framebuffer rendering
-V memory core entity
-V port camera zoom and pan on the memory core
-V free memory dots
-V basic mark-and-sweep control
-V terminal (malloc and free source)
-V allocation signals
-V signal propagation
-V mark a node
-V sweep
-V cell entity
-V node links
-V process entity
-
 # core gameplay loop
 > signal movement only over the links
 > establish doublelinks when detected connection by the track record
@@ -30,9 +14,6 @@ V process entity
 > bomb/charge accumulation mechanic
 
 # advanced flow
-> main menu
-> game over screen
-> credits
 > score table
 > options?
 > retro-styled effects
@@ -50,3 +31,21 @@ V process entity
 > about
 > how to play
 
+V project foundation
+V rendering layout
+V framebuffer rendering
+V memory core entity
+V port camera zoom and pan on the memory core
+V free memory dots
+V basic mark-and-sweep control
+V terminal (malloc and free source)
+V allocation signals
+V signal propagation
+V mark a node
+V sweep
+V cell entity
+V node links
+V process entity
+V main menu
+V game over screen
+V credits

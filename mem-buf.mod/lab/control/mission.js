@@ -50,3 +50,11 @@ function evo(dt) {
 function inProgress() {
     return ($.env.gameState === 'started')
 }
+
+function over() {
+    // TODO gather stats etc...
+    // ...
+    
+    $.env.gameState = 'gameover'
+}
+

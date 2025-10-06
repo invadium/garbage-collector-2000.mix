@@ -1,3 +1,4 @@
+// @depends(/res/txt/label)
 const items = [
     {
         title: 'New Game',
@@ -40,4 +41,4 @@ const items = [
     },
 ]
 items.preservePos = true
-
+items.title = res.txt.label.title
