@@ -178,9 +178,14 @@ class Cell {
 
         } else if (!this.locked) {
             // mark
-            if (this.sel === 0) this.sel = 1
-            else if (this.sel === 1) this.sel = 2
-            else this.sel = 0
+            if (this.sel === 0) {
+                this.sel = 1
+            } else {
+                // else if (this.sel === 1) this.sel = 2
+                if ($.env.time - this._lastTouch < env.tune.doubleClickTimeout) {
+                    this.sel = 0
+                }
+            }
         }
         this._lastTouch = $.env.time
     }

@@ -102,6 +102,32 @@ class Core {
         return walk(term.cell)
     }
 
+    markUsedMem() {
+        const cells = this.cells
+
+        // pre-walk clean up
+        for (let i = cells.length - 1; i >= 0; i--) {
+            cells[i]._visited = 0
+        }
+
+        function walk(cell) {
+            let acc = 1
+            cell._visited = cell.pid
+
+            cell.walkConnected(next => {
+                if (next._visited) return // we've already visited this cell
+                if (next.isFree()) return // just in weird case we've got a free cell here
+                acc += walk(next)
+            })
+
+            return acc
+        }
+
+        this.terminals.forEach(term => {
+            walk(term.cell)
+        })
+    }
+
     liveSignals(pid) {
         if (pid === undefined) pid = -1
 
@@ -216,10 +242,18 @@ class Core {
     }
 
     sweep() {
+        this.markUsedMem()
+
         const ls = this.cells
         for (let i = ls.length - 1; i >= 0; i--) {
             const cell = ls[i]
-            if (cell.sel > 0) cell.free()
+            if (cell.sel > 0) {
+                if (cell._visited) {
+                    const term = this.terminals[cell._visited - 1]
+                    if (term) term.halt(cell)
+                }
+                cell.free()
+            }
         }
     }
 
@@ -312,9 +346,9 @@ class Core {
                         case 1:
                             fill( color.marked )
                             break
-                        case 2:
-                            fill( color.focused )
-                            break
+                        // case 2:
+                        //    fill( color.focused )
+                        //    break
                         default:
                             if (cell.locked) fill( color.locked )
                             else fill( color.low )

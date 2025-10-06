@@ -10,6 +10,7 @@ const style = {
             low:      hsl(.6,  .4, .35),
             base:     hsl(.6,  .5, .5),
             disabled: hsl(.6,  .15, .4),
+            error:    hsl(.02, .4,  .4),
 
             //alloc:    hsl(.6,  .75, .75),
             //release:  hsl(.15, .7,  .65),

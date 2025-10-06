@@ -3,11 +3,10 @@ V establish doublelinks when detected connection by the track record
 V smart signal progpagation
 V free signals that create garbage
 V visual signal transitions over connections
+V halt the process on false positive
 
 # core gameplay loop
-> bomb a node?
-> process damage and penalty on false positive
-> kill and feeze the process?
+> spread bomb damage from multiple nodes
 
 > memory usage indicator (all - [used - garbage - free])
 > bomb/charge indicator?

@@ -34,6 +34,11 @@ class Terminal {
         this.disabled = false
     }
 
+    halt(cause) {
+        this.error = true
+        this.disabled = true
+    }
+
     disable() {
         this.disabled = true
     }
@@ -64,8 +69,9 @@ class Terminal {
 
         const lw = 2
         lineWidth(lw)
-        if (this.disabled) stroke( env.style.color.core.disabled )
-        else stroke( env.style.color.core.base )
+        if (this.error) stroke(env.color.core.error)
+        else if (this.disabled) stroke( env.color.core.disabled )
+        else stroke( env.color.core.base )
 
         const cx = this.__.cx( cell.x ),
               cy = this.__.cy( cell.y )
