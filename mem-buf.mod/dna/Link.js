@@ -9,9 +9,29 @@ class Link {
 
             origin: null,
             dest:   null,
+            signal: null,
+
+            _smellId: 0,
 
             dead:   false,
         }, st)
+    }
+
+    acceptSignal(signal) {
+        if (this.signal) return false
+
+        this.signal = signal
+        signal.setHolder(this)
+
+        return true
+    }
+
+    releaseSignal() {
+        this.signal = null
+    }
+
+    isSignaling() {
+        return (this.signal !== null)
     }
 
     evo(dt) {
@@ -33,11 +53,33 @@ class Link {
               tx = __.cx( dest.x ),
               ty = __.cy( dest.y )
 
-        const lw = 1
+        const lw = this.signal? 2 : 1
         lineWidth(lw)
-        stroke( env.style.color.core.base )
+        if (this.signal) {
+            switch(this.signal.type) {
+                case dry.ALLOC:   stroke( env.color.id.alloc );   break;
+                case dry.RELEASE: stroke( env.color.id.release ); break;
+                case dry.FREE:    stroke( env.color.id.free );    break;
+            }
+        } else {
+            stroke( env.color.core.base )
+        }
 
         line(ox, oy, tx, ty)
+    }
+
+    getRemote(cell) {
+        if (!cell) return
+
+        if (this.origin === cell) return this.dest
+        else if (this.dest === cell) return this.origin
+        else return null
+    }
+
+    getLocal(cell) {
+        if (!cell) return
+
+        if (this.origin === cell || this.dest === cell) return cell
     }
 
     kill() {

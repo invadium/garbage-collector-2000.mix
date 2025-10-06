@@ -28,6 +28,7 @@ function environment() {
 
     $.mem.env.link(env.tune)
     $.mem.env.link(env.style)
+    $.mem.env.link(env.bind)
 
     env.color = env.style.color
     $.mem.env.color = env.style.color

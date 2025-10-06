@@ -29,7 +29,8 @@ function start() {
         lab.port.follow(core, true)
 
         // spawn some terminals
-        const ACTIVE = 4
+        //const ACTIVE = 4
+        const ACTIVE = 1
         for (let i = 0; i < 16; i++) {
             const term = core.attachTerminal( new dna.Terminal() )
             if (i < ACTIVE) term.activate()
@@ -37,6 +38,19 @@ function start() {
 
         $.env.gameState = 'started'
     })
+}
+
+function pause() {
+    lab.port.pause()
+    lab.control.pause()
+    env.pauseTimestamp = env.realTime
+    log('[mission-control] paused')
+}
+
+function resume() {
+    lab.port.resume()
+    lab.control.resume()
+    log('[mission-control] resumed')
 }
 
 function evo(dt) {

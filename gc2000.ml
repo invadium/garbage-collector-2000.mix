@@ -1,8 +1,8 @@
 # core gameplay loop
 > signal movement only over the links
 > establish doublelinks when detected connection by the track record
-> visual signal transitions over connections
 > smart signal progpagation
+> visual signal transitions over connections
 > free signals that create garbage
 
 > bomb a node?
@@ -30,6 +30,10 @@
 > backstory
 > about
 > how to play
+
+# on-boarding
+> tutorial hints
+> shakes to indicate where to click and how to bomb
 
 V project foundation
 V rendering layout

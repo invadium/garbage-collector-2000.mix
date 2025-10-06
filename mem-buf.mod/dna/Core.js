@@ -55,6 +55,9 @@ class Core {
     }
 
     activateNextTerm() {
+        // DEBUG
+        return
+
         const nextTerm = math.rnde( this.terminals.filter(term => term.disabled) )
         if (nextTerm) {
             log(`activating [${nextTerm.name}]`)
@@ -322,7 +325,7 @@ class Core {
                     }
                     rect(lx, ly, mw, mw)
 
-                    if (env.probePid) {
+                    if (env.probePid || env.probeSmell) {
                         const cx = (x + .5) * cellSize,
                               cy = (y + .5) * cellSize
 
@@ -331,7 +334,12 @@ class Core {
                         alignCenter()
                         font(env.style.font.coreDebug.head)
 
-                        text(`#${cell.pid}`, cx, cy)
+                        if (env.probePid) {
+                            text(`#${cell.pid}`, cx, cy)
+                        }
+                        if (env.probeSmell) {
+                            if (cell._smellId) text(`#${cell._smellId}`, cx, cy)
+                        }
                     }
                 }
             }

@@ -17,6 +17,7 @@ class Cell {
 
             _lastTouch: 0,
             _visited:   0,
+            _smellId:   0,
 
             log:        [],
         }, st)
@@ -72,6 +73,18 @@ class Cell {
         }
     }
 
+    freshLinks(excludeId) {
+        return this.links.filter(l => l._smellId !== excludeId)
+    }
+
+    freshLinks(excludeId) {
+        return this.links.filter(l => l._smellId === 0)
+    }
+
+    rawLinks() {
+        return this.links.filter(l => l._smellId === 0)
+    }
+
     walkConnected(fn) {
         for (let i = this.links.length - 1; i >= 0; i--) {
             const link = this.links[i]
@@ -84,9 +97,17 @@ class Cell {
         if (this.signal) return false
 
         this.signal = signal
-        signal.cell = this
+        signal.setHolder(this)
 
         return true
+    }
+
+    releaseSignal() {
+        this.signal = null
+    }
+
+    isSignaling() {
+        return (this.signal !== null)
     }
 
     isFree() {
@@ -170,4 +191,11 @@ class Cell {
         return true
     }
     */
+
+    toString() {
+        const v = this.val? '*' : ''
+        let l = ''
+        for (let i = 0; i < this.links.length; i++) l += '-'
+        return `[${this.name}@${this.x}:${this.y}|${v}${l}]`
+    }
 }

@@ -16,6 +16,7 @@ Available flags:
 --probePid              - show cell process ids
 --probeResUtil          - show resource utilization for each terminal
 --traceCells            - accumulate individual event logs for cells
+--traceMotion           - log every single movement by the signal
 --enableCosmicRays <FQ> - randomly flip memory cells with specified frequency (1 by default)
 ```
 

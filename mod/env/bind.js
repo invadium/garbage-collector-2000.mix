@@ -47,6 +47,9 @@ const fixed = {
     startCheating:  'Backslash',
 
     pause:          'KeyP',
+    mark:           'KeyX',
+    bomb:           'Space',
+
     //releaseAll:     'End',
     menu:           'Escape',
     zoomIn:         'Equal',

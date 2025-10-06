@@ -26,6 +26,10 @@ class Terminal {
         return this.__.memUsage(this)
     }
 
+    liveSignals() {
+        return this.__.liveSignals(this.pid)
+    }
+
     activate() {
         this.disabled = false
     }

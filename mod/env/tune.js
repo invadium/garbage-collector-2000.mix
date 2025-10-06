@@ -1,8 +1,6 @@
 const tune = {
     doubleClickTimeout: .35,
 
-    signalPropagationSpeed: 1,
-
     mission: {
         activateTermFQ: 1/120,
     },
@@ -11,6 +9,11 @@ const tune = {
         cellSize:    20,
         cellRMargin: .15,
         dotRSize:    .075,
+    },
+
+    signal: {
+        propagationSpeed: 1,
+        stallKillSwitch:  2,
     },
 
     title: {

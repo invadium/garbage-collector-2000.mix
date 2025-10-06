@@ -17,12 +17,18 @@ class Process {
         const __ = this.__
         if (__.cell.signal) return // can't spawn - another signal is already there
 
+        const memUsage = __.memUsage()
+
+        // DEBUG just one signal for now
+        if (__.liveSignals() > 0) return // we have one
+
         const signal = new dna.Signal({
             type:    type,
             source:  __,
             process: this,
             pid:     this.pid,
-            ttl:     7 + RND(20),
+            ttl:     11 + RND(17) + floor(.5 * memUsage + RND(4 * memUsage)),
+            ttw:     min(floor(.5 * memUsage), 7),
         })
         const emitted = __.emitSignal(signal)
 

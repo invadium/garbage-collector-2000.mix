@@ -11,9 +11,14 @@ const style = {
             base:     hsl(.6,  .5, .5),
             disabled: hsl(.6,  .15, .4),
 
-            alloc:    hsl(.6,  .75, .75),
-            release:  hsl(.15, .7,  .65),
-            free:     hsl(.01, .7,  .65),
+            //alloc:    hsl(.6,  .75, .75),
+            //release:  hsl(.15, .7,  .65),
+            //free:     hsl(.01, .7,  .65),
+
+            // DEBUG highlight signals
+            alloc:   '#00ffff',
+            release: '#ffff00',
+            free:    '#ff8000',
 
             locked:   hsl(.6,  .25, .25),
             marked:   hsl(.2,  .6, .4),
@@ -28,6 +33,31 @@ const style = {
         menu: {
             title: '/core/base',
         },
+
+        chasm: [
+            '#85daeb',
+            '#5fc9e7',
+            '#5fa1e7',
+            '#5f6ee7',
+            '#4c60aa',
+            '#444774',
+            '#32313b',
+            '#463c5e',
+            '#5d4776',
+            '#855395',
+            '#ab58a8',
+            '#ca60ae',
+            '#f3a787',
+            '#f5daa7',
+            '#8dd894',
+            '#5dc190',
+            '#4ab9a3',
+            '#4593a5',
+            '#5efdf7',
+            '#ff5dcc',
+            '#fdfe89',
+            '#ffffff',
+        ],
     },
 
     font: {
