@@ -29,12 +29,14 @@ class Label {
         const tx = isNumber(this.rx)? rx(this.rx) : this.x
         const ty = isNumber(this.ry)? ry(this.ry) : this.y
 
+        const txt = isFun(this.text)? this.text() : this.text
+
         if (this.shadowColor) {
             fill(this.shadowColor)
-            text(this.text, tx+this.shadowDx, ty+this.shadowDy)
+            text(txt, tx+this.shadowDx, ty+this.shadowDy)
         }
         fill(this.color)
-        text(this.text, tx, ty)
+        text(txt, tx, ty)
 
         restore()
     }

@@ -11,5 +11,13 @@ const tune = {
         cellSize:    20,
         cellRMargin: .15,
         dotRSize:    .075,
-    }
+    },
+
+    title: {
+        hold: 5,
+    },
+
+    credits: {
+        hold: 30, 
+    },
 }

@@ -3,6 +3,7 @@ function environment() {
     $.mem = mod['mem-buf']
 
     // copy debug and trace properties
+    env.debug = !!env.config.debug
     for (const prop in env.config) {
         if (prop.startsWith('debug')
                 || prop.startsWith('trace')
@@ -25,7 +26,10 @@ function environment() {
         }
     }
 
-    env.link($.mem.env.tune)
-    env.link($.mem.env.style)
+    $.mem.env.link(env.tune)
+    $.mem.env.link(env.style)
+
+    env.color = env.style.color
+    $.mem.env.color = env.style.color
 }
 environment.Z = 1

@@ -14,7 +14,8 @@ function reset() {
 }
 
 function start() {
-    log('[mission-control] starting the mission...')
+    log('[mission-control] starting...')
+    $.env.gameState = 'starting'
 
     lab.port._ls.forEach(node => kill(node))
     ids.reset()
@@ -33,6 +34,8 @@ function start() {
             const term = core.attachTerminal( new dna.Terminal() )
             if (i < ACTIVE) term.activate()
         }
+
+        $.env.gameState = 'started'
     })
 }
 
@@ -42,4 +45,8 @@ function evo(dt) {
     env.mtime = '' + floor(this.time * 1000)/1000
 
     if (rnd() < env.tune.mission.activateTermFQ * dt) $.core.activateNextTerm()
+}
+
+function inProgress() {
+    return ($.env.gameState === 'started')
 }
