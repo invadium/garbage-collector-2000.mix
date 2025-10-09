@@ -54,7 +54,6 @@ function resume() {
 }
 
 function evo(dt) {
-    env.time = $.env.time
     this.time += dt
     env.mtime = '' + floor(this.time * 1000)/1000
 

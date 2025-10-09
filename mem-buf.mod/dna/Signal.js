@@ -15,7 +15,7 @@ class Signal {
                 repeats: 0,
                 stalls:  0,
             },
-            lastMotion: $.env.time,
+            lastMotion: env.time,
 
             dead:  false,
         }, st)
@@ -108,7 +108,7 @@ class Signal {
     // next signal motion - move, link, allocate, release, free
     motion() {
         this.stat.motions ++
-        this.lastMotion = $.env.time
+        this.lastMotion = env.time
         // ttl kill switch
         if (this.ttl) {
             this.ttl--
@@ -206,7 +206,7 @@ class Signal {
     }
 
     evo(dt) {
-        if ($.env.time - this.lastMotion > env.tune.signal.propagationSpeed) {
+        if (env.time - this.lastMotion > env.tune.signal.propagationSpeed) {
             const motion = this.motion()
             if (!motion) {
                 this.stat.stalls ++

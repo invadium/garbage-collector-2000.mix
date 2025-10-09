@@ -171,7 +171,7 @@ class Cell {
             // === free cell ===
             if (env.probeAlloc) {
                 // DEBUG create a cell on LMB double click
-                if ($.env.time - this._lastTouch < env.tune.doubleClickTimeout) {
+                if (env.time - this._lastTouch < env.tune.doubleClickTimeout) {
                     this.allocate(0)
                 }
             }
@@ -182,12 +182,12 @@ class Cell {
                 this.sel = 1
             } else {
                 // else if (this.sel === 1) this.sel = 2
-                if ($.env.time - this._lastTouch < env.tune.doubleClickTimeout) {
+                if (env.time - this._lastTouch < env.tune.doubleClickTimeout) {
                     this.sel = 0
                 }
             }
         }
-        this._lastTouch = $.env.time
+        this._lastTouch = env.time
     }
 
     /*
